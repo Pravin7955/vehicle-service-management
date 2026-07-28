@@ -32,11 +32,11 @@ class VehicleVehicle(models.Model):
     )
     owner_phone = fields.Char(
         string="Owner Phone",
-        readonly=True,
+        related="owner_id.phone",
     )
     owner_email = fields.Char(
         string="Owner Email",
-        readonly=True,
+        related="owner_id.email",
     )
     colour = fields.Char(string="Colour")
     active = fields.Boolean(
@@ -78,12 +78,3 @@ class VehicleVehicle(models.Model):
                 record.vehicle_age = 0
                 continue
             record.vehicle_age = current_year - record.year
-
-    @api.onchange("owner_id")
-    def _onchange_owner(self):
-        if self.owner_id:
-            self.owner_phone = self.owner_id.phone
-            self.owner_email = self.owner_id.email
-        else:
-            self.owner_phone = False
-            self.owner_email = False
