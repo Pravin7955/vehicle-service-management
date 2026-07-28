@@ -8,12 +8,17 @@ from odoo.exceptions import ValidationError
 class VehicleVehicle(models.Model):
     _name = "vehicle.vehicle"
     _description = "Vehicle"
+    _inherit = [
+        "mail.thread",
+        "mail.activity.mixin",
+    ]
     _rec_name = "registration_number"
     _order = "registration_number"
 
     registration_number = fields.Char(
         string="Registration Number",
         required=True,
+        tracking=True,
         copy=False,
         index=True,
         help="Official registration number of the vehicle.",
@@ -28,6 +33,7 @@ class VehicleVehicle(models.Model):
         "res.partner",
         string="Owner",
         required=True,
+        tracking=True,
         index=True,
         ondelete="restrict",
     )
@@ -43,6 +49,7 @@ class VehicleVehicle(models.Model):
     active = fields.Boolean(
         string="Active",
         default=True,
+        tracking=True,
     )
 
     parts_cost = fields.Float(
