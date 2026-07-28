@@ -19,7 +19,7 @@
 
     "category": "Services",
 
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.0.1",
 
     "license": "LGPL-3",
 
@@ -33,11 +33,12 @@
         "security/ir.model.access.csv",
         "security/vehicle_rules.xml",
         "views/vehicle_views.xml",
+        "views/vehicle_manufacturer_views.xml",
         "views/menu.xml",
     ],
 
     "demo": [
-
+        "demo/manufacturer_demo.xml",
     ],
 
     "assets": {

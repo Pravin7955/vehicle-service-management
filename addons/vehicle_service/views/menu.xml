@@ -14,4 +14,17 @@
         action="action_vehicle"
         sequence="10"/>
 
+    <menuitem
+        id="menu_vehicle_master_data"
+        name="Master Data"
+        parent="menu_vehicle_service_root"
+        sequence="5"/>
+    
+    <menuitem
+        id="menu_vehicle_manufacturer"
+        name="Manufacturers"
+        parent="menu_vehicle_master_data"
+        action="action_vehicle_manufacturer"
+        sequence="10"/>
+
 </odoo>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="manufacturer_honda" model="vehicle.manufacturer">
+        <field name="name">Honda</field>
+        <field name="code">HON</field>
+    </record>
+
+    <record id="manufacturer_toyota" model="vehicle.manufacturer">
+        <field name="name">Toyota</field>
+        <field name="code">TOY</field>
+    </record>
+
+    <record id="manufacturer_hyundai" model="vehicle.manufacturer">
+        <field name="name">Hyundai</field>
+        <field name="code">HYU</field>
+    </record>
+
+    <record id="manufacturer_mahindra" model="vehicle.manufacturer">
+        <field name="name">Mahindra</field>
+        <field name="code">MAH</field>
+    </record>
+
+    <record id="manufacturer_tata" model="vehicle.manufacturer">
+        <field name="name">Tata</field>
+        <field name="code">TAT</field>
+    </record>
+
+    <record id="manufacturer_suzuki" model="vehicle.manufacturer">
+        <field name="name">Maruti Suzuki</field>
+        <field name="code">SUZ</field>
+    </record>
+
+    <record id="manufacturer_bmw" model="vehicle.manufacturer">
+        <field name="name">BMW</field>
+        <field name="code">BMW</field>
+    </record>
+
+    <record id="manufacturer_audi" model="vehicle.manufacturer">
+        <field name="name">Audi</field>
+        <field name="code">AUD</field>
+    </record>
+
+    <record id="manufacturer_mercedes" model="vehicle.manufacturer">
+        <field name="name">Mercedes-Benz</field>
+        <field name="code">MER</field>
+    </record>
+    
+    <record id="manufacturer_kia" model="vehicle.manufacturer">
+        <field name="name">Kia</field>
+        <field name="code">KIA</field>
+    </record>
+
+</odoo>
