@@ -113,3 +113,31 @@ class VehicleVehicle(models.Model):
                 record.vehicle_age = 0
                 continue
             record.vehicle_age = current_year - record.year
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            registration = vals.get("registration_number")
+            if registration:
+                vals["registration_number"] = self._normalise_registration(registration)
+
+        return super().create(vals_list)
+
+    def write(self, vals):
+        registration = vals.get("registration_number")
+        if registration:
+            vals["registration_number"] = self._normalise_registration(registration)
+
+        return super().write(vals)
+
+    def copy(self, default=None):
+        default = dict(default or {})
+
+        default["registration_number"] = (
+            f"{self.registration_number}-COPY"
+        )
+
+        return super().copy(default)
+
+    def _normalise_registration(self, value):
+        return value.upper().strip() if value else value
