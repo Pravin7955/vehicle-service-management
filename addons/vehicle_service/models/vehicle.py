@@ -2,6 +2,7 @@
 
 from datetime import date
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class VehicleVehicle(models.Model):
@@ -60,6 +61,40 @@ class VehicleVehicle(models.Model):
         string="Vehicle Age",
         compute="_compute_vehicle_age",
     )
+
+    _sql_constraints = [
+        (
+            "unique_registration",
+            "unique(registration_number)",
+            "Registration number must be unique.",
+        ),
+    ]
+
+    @api.constrains("year")
+    def _check_year(self):
+        current_year = date.today().year
+
+        for record in self:
+            if (
+                record.year
+                and record.year > current_year
+            ):
+                raise ValidationError(
+                    "Manufacturing year cannot be in the future."
+                )
+
+    @api.constrains("parts_cost", "labour_cost")
+    def _check_costs(self):
+        for record in self:
+            errors = []
+            if record.parts_cost < 0:
+                errors.append("• Parts cost cannot be negative.")
+
+            if record.labour_cost < 0:
+                errors.append("• Labour cost cannot be negative.")
+
+            if errors:
+                raise ValidationError("\n".join(errors))
 
     @api.depends("parts_cost", "labour_cost")
     def _compute_total_cost(self):
