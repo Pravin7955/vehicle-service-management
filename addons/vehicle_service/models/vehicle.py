@@ -13,8 +13,24 @@ class VehicleVehicle(models.Model):
         string="Registration Number",
         required=True,
         copy=False,
+        index=True,
+        help="Official registration number of the vehicle.",
     )
-    make = fields.Char(string="Manufacturer")
+    make = fields.Char(
+        string="Manufacturer",
+        index=True,
+    )
     model = fields.Char(string="Model")
     year = fields.Integer(string="Manufacturing Year")
-    active = fields.Boolean(default=True)
+    owner_id = fields.Many2one(
+        "res.partner",
+        string="Owner",
+        required=True,
+        index=True,
+        ondelete="restrict",
+    )
+    colour = fields.Char(string="Colour")
+    active = fields.Boolean(
+        string="Active",
+        default=True,
+    )
