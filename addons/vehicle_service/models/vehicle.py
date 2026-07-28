@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
 from odoo import api, fields, models
 
 
@@ -29,6 +30,14 @@ class VehicleVehicle(models.Model):
         index=True,
         ondelete="restrict",
     )
+    owner_phone = fields.Char(
+        string="Owner Phone",
+        readonly=True,
+    )
+    owner_email = fields.Char(
+        string="Owner Email",
+        readonly=True,
+    )
     colour = fields.Char(string="Colour")
     active = fields.Boolean(
         string="Active",
@@ -38,15 +47,18 @@ class VehicleVehicle(models.Model):
     parts_cost = fields.Float(
         string="Parts Cost",
     )
-
     labour_cost = fields.Float(
         string="Labour Cost",
     )
-
     total_cost = fields.Float(
         string="Total Cost",
         compute="_compute_total_cost",
         store=True,
+    )
+
+    vehicle_age = fields.Integer(
+        string="Vehicle Age",
+        compute="_compute_vehicle_age",
     )
 
     @api.depends("parts_cost", "labour_cost")
@@ -56,3 +68,22 @@ class VehicleVehicle(models.Model):
                 record.parts_cost +
                 record.labour_cost
             )
+
+    @api.depends("year")
+    def _compute_vehicle_age(self):
+        current_year = date.today().year
+
+        for record in self:
+            if not record.year:
+                record.vehicle_age = 0
+                continue
+            record.vehicle_age = current_year - record.year
+
+    @api.onchange("owner_id")
+    def _onchange_owner(self):
+        if self.owner_id:
+            self.owner_phone = self.owner_id.phone
+            self.owner_email = self.owner_id.email
+        else:
+            self.owner_phone = False
+            self.owner_email = False
