@@ -32,6 +32,8 @@
         "security/groups.xml",
         "security/ir.model.access.csv",
         "security/vehicle_rules.xml",
+        "views/vehicle_views.xml",
+        "views/menu.xml",
     ],
 
     "demo": [

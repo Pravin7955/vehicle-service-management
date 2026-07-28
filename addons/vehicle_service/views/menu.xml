@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_vehicle_service_root"
+        name="Vehicle Service"
+        sequence="10"
+        groups="vehicle_service.group_vehicle_service_mechanic"/>
+    
+    <menuitem
+        id="menu_vehicle"
+        name="Vehicles"
+        parent="menu_vehicle_service_root"
+        action="action_vehicle"
+        sequence="10"/>
+
+</odoo>
