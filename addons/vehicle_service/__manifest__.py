@@ -29,7 +29,9 @@
     ],
 
     "data": [
-
+        "security/groups.xml",
+        "security/ir.model.access.csv",
+        "security/vehicle_rules.xml",
     ],
 
     "demo": [
