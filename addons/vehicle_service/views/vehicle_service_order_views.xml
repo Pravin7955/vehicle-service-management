@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Service Order List View -->
+    <record id="view_vehicle_service_order_list" model="ir.ui.view">
+        <field name="name">vehicle.service.order.list</field>
+        <field name="model">vehicle.service.order</field>
+        <field name="arch" type="xml">
+            <tree string="Service Orders" default_order="check_in_datetime desc">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="vehicle_id"/>
+                <field name="check_in_datetime"/>
+                <field name="expected_delivery_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Service Order Form View -->
+    <record id="view_vehicle_service_order_form" model="ir.ui.view">
+        <field name="name">vehicle.service.order.form</field>
+        <field name="model">vehicle.service.order</field>
+        <field name="arch" type="xml">
+            <form string="Service Order">
+                <header>
+                    <button
+                        name="action_confirm"
+                        type="object"
+                        string="Confirm"
+                        class="btn-primary"
+                        invisible="state != 'draft'"/>
+                    <button
+                        name="action_start"
+                        type="object"
+                        string="Start Work"
+                        invisible="state != 'confirmed'"/>
+                    <button
+                        name="action_complete"
+                        type="object"
+                        string="Complete"
+                        invisible="state != 'in_progress'"/>
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        invisible="state in ('completed','cancelled')"/>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,confirmed,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box"/>
+                    <group>
+                        <group string="Service Information">
+                            <field name="name" readonly="1"/>
+                            <field name="vehicle_id"/>
+                            <field name="customer_id"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="check_in_datetime"/>
+                            <field name="expected_delivery_date"/>
+                            <field name="odometer"/>
+                        </group>
+                    </group>
+                    <group string="Customer Complaint">
+                        <field
+                            name="customer_complaint"
+                            placeholder="Describe the customer's complaint..."/>
+                    </group>
+                    <group>
+                        <field
+                            name="notes"
+                            widget="html"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field
+                        name="message_follower_ids"
+                        groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Order Search View -->
+    <record id="view_vehicle_service_order_search" model="ir.ui.view">
+        <field name="name">vehicle.service.order.search</field>
+        <field name="model">vehicle.service.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="customer_id" />
+                <field name="vehicle_id" />
+                <separator/>
+                <filter
+                    name="draft"
+                    string="Draft"
+                    domain="[('state', '=', 'draft')]"/>
+                <filter
+                    name="confirmed"
+                    string="Confirmed"
+                    domain="[('state', '=', 'confirmed')]"/>
+                <filter
+                    name="in_progress"
+                    string="In Progress"
+                    domain="[('state', '=', 'in_progress')]"/>
+                <filter
+                    name="completed"
+                    string="Completed"
+                    domain="[('state', '=', 'completed')]"/>
+                <filter
+                    name="cancelled"
+                    string="Cancelled"
+                    domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <!-- Bug in the filter so commented, Need to check it later -->
+                <!-- <filter
+                    name="today"
+                    string="Today"
+                    domain="[('check_in_datetime','=',context_today())]"/>
+                <filter
+                    name="this_month"
+                    string="This Month"
+                    domain="[
+                        ('check_in_datetime','>=',context_today().replace(day=1))
+                    ]"/> -->
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter
+                        name="customer"
+                        string="Customer"
+                        context="{'group_by':'customer_id'}"/>
+                    <filter
+                        name="vehicle"
+                        string="Vehicle"
+                        context="{'group_by':'vehicle_id'}"/>
+                    <filter
+                        name="state"
+                        string="State"
+                        context="{'group_by':'state'}"/>
+                    <filter
+                        name="check_in_datetime"
+                        string="Check-In Date"
+                        context="{'group_by':'check_in_datetime'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Service Order Action -->
+    <record id="action_vehicle_service_order" model="ir.actions.act_window">
+        <field name="name">Service Orders</field>
+        <field name="res_model">vehicle.service.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_vehicle_service_order_search"/>
+    </record>
+
+</odoo>

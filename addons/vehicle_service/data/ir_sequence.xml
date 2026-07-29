@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_vehicle_service_order" model="ir.sequence">
+        <field name="name">Vehicle Service Order Sequence</field>
+        <field name="code">vehicle.service.order</field>
+        <field name="prefix">SO%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+    </record>
+
+</odoo>

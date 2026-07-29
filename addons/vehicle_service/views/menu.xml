@@ -6,32 +6,45 @@
         name="Vehicle Service"
         sequence="10"
         groups="vehicle_service.group_vehicle_service_mechanic"/>
+
+    <menuitem
+        id="menu_operations"
+        name="Operations"
+        parent="menu_vehicle_service_root"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_vehicle_data"
+        name="Vehicle Data"
+        parent="menu_vehicle_service_root"
+        sequence="10"/>
     
     <menuitem
         id="menu_vehicle"
         name="Vehicles"
-        parent="menu_vehicle_service_root"
+        parent="menu_vehicle_data"
         action="action_vehicle"
         sequence="10"/>
-
-    <menuitem
-        id="menu_vehicle_master_data"
-        name="Master Data"
-        parent="menu_vehicle_service_root"
-        sequence="5"/>
     
     <menuitem
         id="menu_vehicle_manufacturer"
         name="Manufacturers"
-        parent="menu_vehicle_master_data"
+        parent="menu_vehicle_data"
         action="action_vehicle_manufacturer"
         sequence="10"/>
     
     <menuitem
         id="menu_vehicle_model"
         name="Vehicle Models"
-        parent="menu_vehicle_master_data"
+        parent="menu_vehicle_data"
         action="action_vehicle_model"
         sequence="20"/>
+    
+    <menuitem
+        id="menu_vehicle_service_order"
+        name="Service Orders"
+        parent="menu_operations"
+        action="action_vehicle_service_order"
+        sequence="10"/>
 
 </odoo>
