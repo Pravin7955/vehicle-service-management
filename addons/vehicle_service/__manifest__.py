@@ -24,8 +24,8 @@
     "license": "LGPL-3",
 
     "depends": [
-        "base",
         "mail",
+        "contacts",
     ],
 
     "data": [
@@ -35,6 +35,7 @@
         "views/vehicle_views.xml",
         "views/vehicle_manufacturer_views.xml",
         "views/vehicle_model_views.xml",
+        "views/res_partner_views.xml",
         "views/menu.xml",
     ],
 
