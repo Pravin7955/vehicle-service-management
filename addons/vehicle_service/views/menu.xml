@@ -26,5 +26,12 @@
         parent="menu_vehicle_master_data"
         action="action_vehicle_manufacturer"
         sequence="10"/>
+    
+    <menuitem
+        id="menu_vehicle_model"
+        name="Vehicle Models"
+        parent="menu_vehicle_master_data"
+        action="action_vehicle_model"
+        sequence="20"/>
 
 </odoo>

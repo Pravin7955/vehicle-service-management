@@ -34,11 +34,13 @@
         "security/vehicle_rules.xml",
         "views/vehicle_views.xml",
         "views/vehicle_manufacturer_views.xml",
+        "views/vehicle_model_views.xml",
         "views/menu.xml",
     ],
 
     "demo": [
         "demo/manufacturer_demo.xml",
+        "demo/model_demo.xml",
     ],
 
     "assets": {

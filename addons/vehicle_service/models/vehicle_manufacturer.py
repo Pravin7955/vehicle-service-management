@@ -41,6 +41,15 @@ class VehicleManufacturer(models.Model):
         default=True,
     )
 
+    vehicle_model_ids = fields.One2many(
+        "vehicle.model",
+        "manufacturer_id",
+        string="Vehicle Models",
+    )
+    vehicle_model_count = fields.Integer(
+        compute="_compute_vehicle_model_count",
+    )
+
     _sql_constraints = [
         (
             "manufacturer_name_unique",
@@ -61,3 +70,10 @@ class VehicleManufacturer(models.Model):
                 raise ValidationError(
                     "Manufacturer name cannot be empty."
                 )
+
+    @api.depends("vehicle_model_ids")
+    def _compute_vehicle_model_count(self):
+        for manufacturer in self:
+            manufacturer.vehicle_model_count = len(
+                manufacturer.vehicle_model_ids
+            )
