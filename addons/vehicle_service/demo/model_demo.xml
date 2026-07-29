@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Honda -->
+    <record id="vehicle_model_honda_city" model="vehicle.model">
+        <field name="name">City</field>
+        <field name="code">HON_CITY</field>
+        <field name="manufacturer_id" ref="manufacturer_honda"/>
+    </record>
+
+    <record id="vehicle_model_honda_amaze" model="vehicle.model">
+        <field name="name">Amaze</field>
+        <field name="code">HON_AMAZE</field>
+        <field name="manufacturer_id" ref="manufacturer_honda"/>
+    </record>
+
+    <!-- Toyota -->
+    <record id="vehicle_model_toyota_fortuner" model="vehicle.model">
+        <field name="name">Fortuner</field>
+        <field name="code">TOY_FORTUNER</field>
+        <field name="manufacturer_id" ref="manufacturer_toyota"/>
+    </record>
+
+    <record id="vehicle_model_toyota_innova" model="vehicle.model">
+        <field name="name">Innova</field>
+        <field name="code">TOY_INNOVA</field>
+        <field name="manufacturer_id" ref="manufacturer_toyota"/>
+    </record>
+
+    <!-- Hyundai -->
+    <record id="vehicle_model_hyundai_creta" model="vehicle.model">
+        <field name="name">Creta</field>
+        <field name="code">HYU_CRETA</field>
+        <field name="manufacturer_id" ref="manufacturer_hyundai"/>
+    </record>
+
+    <record id="vehicle_model_hyundai_verna" model="vehicle.model">
+        <field name="name">Verna</field>
+        <field name="code">HYU_VERNA</field>
+        <field name="manufacturer_id" ref="manufacturer_hyundai"/>
+    </record>
+
+    <!-- Mahindra -->
+    <record id="vehicle_model_mahindra_scorpio" model="vehicle.model">
+        <field name="name">Scorpio</field>
+        <field name="code">MAH_SCORPIO</field>
+        <field name="manufacturer_id" ref="manufacturer_mahindra"/>
+    </record>
+
+    <record id="vehicle_model_mahindra_thar" model="vehicle.model">
+        <field name="name">Thar</field>
+        <field name="code">MAH_THAR</field>
+        <field name="manufacturer_id" ref="manufacturer_mahindra"/>
+    </record>
+
+    <!-- Tata -->
+    <record id="vehicle_model_tata_nexon" model="vehicle.model">
+        <field name="name">Nexon</field>
+        <field name="code">TAT_NEXON</field>
+        <field name="manufacturer_id" ref="manufacturer_tata"/>
+    </record>
+
+    <record id="vehicle_model_tata_harrier" model="vehicle.model">
+        <field name="name">Harrier</field>
+        <field name="code">TAT_HARRIER</field>
+        <field name="manufacturer_id" ref="manufacturer_tata"/>
+    </record>
+
+    <!-- Maruti Suzuki -->
+    <record id="vehicle_model_suzuki_swift" model="vehicle.model">
+        <field name="name">Swift</field>
+        <field name="code">SUZ_SWIFT</field>
+        <field name="manufacturer_id" ref="manufacturer_suzuki"/>
+    </record>
+
+    <record id="vehicle_model_suzuki_baleno" model="vehicle.model">
+        <field name="name">Baleno</field>
+        <field name="code">SUZ_BALENO</field>
+        <field name="manufacturer_id" ref="manufacturer_suzuki"/>
+    </record>
+
+    <!-- BMW -->
+    <record id="vehicle_model_bmw_x1" model="vehicle.model">
+        <field name="name">X1</field>
+        <field name="code">BMW_X1</field>
+        <field name="manufacturer_id" ref="manufacturer_bmw"/>
+    </record>
+
+    <record id="vehicle_model_bmw_3series" model="vehicle.model">
+        <field name="name">3 Series</field>
+        <field name="code">BMW_3SERIES</field>
+        <field name="manufacturer_id" ref="manufacturer_bmw"/>
+    </record>
+
+    <!-- Audi -->
+    <record id="vehicle_model_audi_a4" model="vehicle.model">
+        <field name="name">A4</field>
+        <field name="code">AUD_A4</field>
+        <field name="manufacturer_id" ref="manufacturer_audi"/>
+    </record>
+
+    <record id="vehicle_model_audi_q5" model="vehicle.model">
+        <field name="name">Q5</field>
+        <field name="code">AUD_Q5</field>
+        <field name="manufacturer_id" ref="manufacturer_audi"/>
+    </record>
+
+    <!-- Mercedes-Benz -->
+    <record id="vehicle_model_mercedes_cclass" model="vehicle.model">
+        <field name="name">C-Class</field>
+        <field name="code">MER_CCLASS</field>
+        <field name="manufacturer_id" ref="manufacturer_mercedes"/>
+    </record>
+
+    <record id="vehicle_model_mercedes_glc" model="vehicle.model">
+        <field name="name">GLC</field>
+        <field name="code">MER_GLC</field>
+        <field name="manufacturer_id" ref="manufacturer_mercedes"/>
+    </record>
+
+    <!-- Kia -->
+    <record id="vehicle_model_kia_seltos" model="vehicle.model">
+        <field name="name">Seltos</field>
+        <field name="code">KIA_SELTOS</field>
+        <field name="manufacturer_id" ref="manufacturer_kia"/>
+    </record>
+
+    <record id="vehicle_model_kia_sonet" model="vehicle.model">
+        <field name="name">Sonet</field>
+        <field name="code">KIA_SONET</field>
+        <field name="manufacturer_id" ref="manufacturer_kia"/>
+    </record>
+
+</odoo>

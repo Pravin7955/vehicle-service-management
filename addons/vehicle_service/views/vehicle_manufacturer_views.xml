@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Manufacturer List View -->
+    <record id="view_vehicle_manufacturer_list" model="ir.ui.view">
+        <field name="name">vehicle.manufacturer.list</field>
+        <field name="model">vehicle.manufacturer</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="logo" widget="image"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="country_id"/>
+                <field name="website"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Manufacturer Form View -->
+    <record id="view_vehicle_manufacturer_form" model="ir.ui.view">
+        <field name="name">vehicle.manufacturer.form</field>
+        <field name="model">vehicle.manufacturer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="country_id"/>
+                            <field name="website"/>
+                        </group>
+                        <group>
+                            <field name="logo" widget="image"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <group string="Vehicle Models">
+                        <field name="vehicle_model_ids">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="active"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Manufacturer Search View -->
+    <record id="view_vehicle_manufacturer_search" model="ir.ui.view">
+        <field name="name">vehicle.manufacturer.search</field>
+        <field name="model">vehicle.manufacturer</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="code" />
+                <field name="country_id" />
+                <separator/>
+                <filter 
+                    name="active" 
+                    string="Active" 
+                    domain="[('active', '=', True)]" 
+                    />
+                <filter 
+                    name="archived" 
+                    string="Archived" 
+                    domain="[('active', '=', False)]" 
+                    />
+                <separator/>
+                <group string="Group By">
+                    <filter 
+                        name="country" 
+                        string="Country" 
+                        context="{'group_by': 'country_id'}" 
+                        />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Manufacturer Action -->
+    <record id="action_vehicle_manufacturer" model="ir.actions.act_window">
+        <field name="name">Manufacturers</field>
+        <field name="res_model">vehicle.manufacturer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_vehicle_manufacturer_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first vehicle manufacturer.
+            </p>
+            <p>
+                Manage vehicle manufacturers used
+                throughout the Vehicle Service System.
+            </p>
+        </field>
+    </record>
+
+</odoo>

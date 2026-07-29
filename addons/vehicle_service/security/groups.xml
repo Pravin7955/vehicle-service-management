@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Module Category -->
+    <record id="module_category_vehicle_service" model="ir.module.category">
+        <field name="name">Vehicle Service</field>
+        <field name="description">Vehicle Service Management</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <!-- Service Mechanic -->
+    <record id="group_vehicle_service_mechanic" model="res.groups">
+        <field name="name">Service Mechanic</field>
+        <field name="category_id" ref="module_category_vehicle_service"/>
+    </record>
+
+    <!-- Service Advisor -->
+    <record id="group_vehicle_service_advisor" model="res.groups">
+        <field name="name">Service Advisor</field>
+        <field name="category_id" ref="module_category_vehicle_service"/>
+        <field name="implied_ids"
+           eval="[(4, ref('vehicle_service.group_vehicle_service_mechanic'))]"/>
+    </record>
+
+    <!-- Service Manager -->
+    <record id="group_vehicle_service_manager" model="res.groups">
+        <field name="name">Service Manager</field>
+        <field name="category_id" ref="module_category_vehicle_service"/>
+        <field name="implied_ids"
+           eval="[(4, ref('vehicle_service.group_vehicle_service_advisor'))]"/>
+    </record>
+
+</odoo>

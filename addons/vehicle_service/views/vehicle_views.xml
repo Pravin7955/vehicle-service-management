@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vehicle List View -->
+    <record id="view_vehicle_list" model="ir.ui.view">
+        <field name="name">vehicle.vehicle.list</field>
+        <field name="model">vehicle.vehicle</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="registration_number"/>
+                <field name="manufacturer_id"/>
+                <field name="model_id"/>
+                <field name="owner_id"/>
+                <field name="manufacturing_year"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vehicle Form View -->
+    <record id="view_vehicle_form" model="ir.ui.view">
+        <field name="name">vehicle.vehicle.form</field>
+        <field name="model">vehicle.vehicle</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="registration_number"/>
+                        <h1>
+                            <field name="registration_number"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="manufacturer_id"/>
+                            <field
+                                name="model_id"
+                                domain="[('manufacturer_id', '=', manufacturer_id)]"/>
+                            <field name="manufacturing_year"/>
+                            <field name="vehicle_age" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="owner_id"/>
+                            <field name="owner_mobile" readonly="1"/>
+                            <field name="owner_email" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Cost Details">
+                        <group>
+                            <field name="parts_cost"/>
+                            <field name="labour_cost"/>
+                        </group>
+                        <group>
+                            <field name="total_cost" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vehicle Search View -->
+    <record id="view_vehicle_search" model="ir.ui.view">
+        <field name="name">vehicle.vehicle.search</field>
+        <field name="model">vehicle.vehicle</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="registration_number"/>
+                <field name="owner_id"/>
+                <field name="manufacturer_id"/>
+                <field name="model_id"/>
+                <separator/>
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]"/>
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Owner"
+                        name="group_owner"
+                        context="{'group_by':'owner_id'}"/>
+                    <filter
+                        string="Manufacturer"
+                        name="group_manufacturer"
+                        context="{'group_by':'manufacturer_id'}"/>
+                    <filter
+                        string="Model"
+                        name="group_model"
+                        context="{'group_by':'model_id'}"/>
+                    <filter
+                        string="Manufacturing Year"
+                        name="group_manufacturing_year"
+                        context="{'group_by':'manufacturing_year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vehicle Action -->
+    <record id="action_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicle</field>
+        <field name="res_model">vehicle.vehicle</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_vehicle_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first vehicle.
+            </p>
+            <p>
+                Manage customer vehicles
+                and their service information.
+            </p>
+        </field>
+    </record>
+
+</odoo>
