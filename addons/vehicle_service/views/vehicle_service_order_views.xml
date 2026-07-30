@@ -77,9 +77,9 @@
                     <notebook>
                         <page string="General">
                             <group string="Financial Summary">
-                                <field
-                                    name="labour_cost"
-                                    readonly="1"/>
+                                <field name="labour_cost" readonly="1"/>
+                                <field name="parts_cost" readonly="1"/>
+                                <field name="total_cost" readonly="1"/>
                             </group>
                         </page>
                         <page string="Labour">
@@ -90,6 +90,19 @@
                                     <field name="technician_id"/>
                                     <field name="hours"/>
                                     <field name="labour_rate"/>
+                                    <field name="subtotal" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Parts">
+                            <field name="part_line_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom_id" readonly="1"/>
+                                    <field name="unit_price"/>
                                     <field name="subtotal" readonly="1"/>
                                 </tree>
                             </field>

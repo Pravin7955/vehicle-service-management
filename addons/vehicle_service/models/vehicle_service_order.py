@@ -63,6 +63,12 @@ class VehicleServiceOrder(models.Model):
         string="Labour Lines",
         copy=True,
     )
+    part_line_ids = fields.One2many(
+        "vehicle.service.part",
+        "service_order_id",
+        string="Parts",
+        copy=True,
+    )
     
     check_in_datetime = fields.Datetime(
         string="Check-In",
@@ -87,6 +93,18 @@ class VehicleServiceOrder(models.Model):
         compute="_compute_labour_cost",
         store=True,
         tracking=True,
+    )
+    parts_cost = fields.Monetary(
+        string="Parts Cost",
+        currency_field="currency_id",
+        compute="_compute_parts_cost",
+        store=True,
+    )
+    total_cost = fields.Monetary(
+        string="Total Cost",
+        currency_field="currency_id",
+        compute="_compute_total_cost",
+        store=True,
     )
 
     customer_complaint = fields.Text(
@@ -144,6 +162,23 @@ class VehicleServiceOrder(models.Model):
                 order.labour_line_ids.mapped(
                     "subtotal"
                 )
+            )
+
+    @api.depends("part_line_ids.subtotal")
+    def _compute_parts_cost(self):
+        for order in self:
+            order.parts_cost = sum(
+                order.part_line_ids.mapped(
+                    "subtotal"
+                )
+            )
+
+    @api.depends("labour_cost", "parts_cost")
+    def _compute_total_cost(self):
+        for order in self:
+            order.total_cost = (
+                order.labour_cost
+                + order.parts_cost
             )
 
     @api.onchange("vehicle_id")

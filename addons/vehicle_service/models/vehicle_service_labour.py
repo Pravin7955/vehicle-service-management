@@ -25,9 +25,16 @@ class VehicleServiceLabour(models.Model):
         ondelete="cascade",
         index=True,
     )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        related="service_order_id.company_id",
+        store=True,
+        readonly=True,
+    )
     currency_id = fields.Many2one(
         "res.currency",
-        related="service_order_id.company_id.currency_id",
+        related="service_order_id.currency_id",
         store=True,
         readonly=True,
     )

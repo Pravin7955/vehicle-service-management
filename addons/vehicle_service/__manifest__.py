@@ -26,6 +26,7 @@
     "depends": [
         "mail",
         "contacts",
+        "product",
     ],
 
     "data": [
