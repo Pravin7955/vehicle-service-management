@@ -5,3 +5,4 @@ from . import res_partner
 from . import vehicle_manufacturer
 from . import vehicle_model
 from . import vehicle_service_order
+from . import vehicle_service_labour

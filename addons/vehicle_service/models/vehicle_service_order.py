@@ -42,6 +42,13 @@ class VehicleServiceOrder(models.Model):
         default=lambda self: self.env.company,
         index=True,
     )
+    currency_id = fields.Many2one(
+        "res.currency",
+        string="Currency",
+        related="company_id.currency_id",
+        store=True,
+        readonly=True,
+    )
     advisor_id = fields.Many2one(
         "res.users",
         string="Service Advisor",
@@ -50,6 +57,13 @@ class VehicleServiceOrder(models.Model):
         tracking=True,
         index=True,
     )
+    labour_line_ids = fields.One2many(
+        "vehicle.service.labour",
+        "service_order_id",
+        string="Labour Lines",
+        copy=True,
+    )
+    
     check_in_datetime = fields.Datetime(
         string="Check-In",
         default=fields.Datetime.now,
@@ -67,6 +81,14 @@ class VehicleServiceOrder(models.Model):
         string="Expected Delivery",
         tracking=True,
     )
+    labour_cost = fields.Monetary(
+        string="Labour Cost",
+        currency_field="currency_id",
+        compute="_compute_labour_cost",
+        store=True,
+        tracking=True,
+    )
+
     customer_complaint = fields.Text(
         string="Customer Complaint",
         required=True,
@@ -114,6 +136,15 @@ class VehicleServiceOrder(models.Model):
                 raise ValidationError(
                     "Expected delivery date cannot be earlier than the service date."
                 )
+
+    @api.depends("labour_line_ids.subtotal")
+    def _compute_labour_cost(self):
+        for order in self:
+            order.labour_cost = sum(
+                order.labour_line_ids.mapped(
+                    "subtotal"
+                )
+            )
 
     @api.onchange("vehicle_id")
     def _onchange_vehicle_id(self):
