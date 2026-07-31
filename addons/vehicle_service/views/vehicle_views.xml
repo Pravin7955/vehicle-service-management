@@ -66,6 +66,26 @@
                             <field name="total_cost" readonly="1"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="History">
+                            <group string="Latest Completed Service">
+                                <field
+                                    name="last_service_order_id"
+                                    readonly="1"/>
+                            </group>
+                            <group>
+                                <button
+                                    name="action_view_completed_service_history"
+                                    type="object"
+                                    string="View Complete History"
+                                    class="btn-primary"/>
+                                <button
+                                    name="action_new_service_order"
+                                    type="object"
+                                    string="Create New Service Order"/>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" groups="base.group_user"/>

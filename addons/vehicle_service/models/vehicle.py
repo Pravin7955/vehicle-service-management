@@ -52,6 +52,13 @@ class VehicleVehicle(models.Model):
         "vehicle_id",
         string="Service Orders",
     )
+    last_service_order_id = fields.Many2one(
+        "vehicle.service.order",
+        string="Last Service",
+        compute="_compute_last_service_order",
+        store=True,
+        readonly=True,
+    )
 
     owner_mobile = fields.Char(
         string="Owner Mobile",
@@ -210,6 +217,35 @@ class VehicleVehicle(models.Model):
                 0,
             )
 
+    @api.depends(
+        "service_order_ids.state",
+        "service_order_ids.check_in_datetime",
+    )
+    def _compute_last_service_order(self):
+        orders = self.env["vehicle.service.order"].search(
+            [
+                ("vehicle_id", "in", self.ids),
+                ("state", "=", "completed"),
+            ],
+            order="check_in_datetime desc, id desc",
+        )
+
+        latest = {}
+
+        # Since the results are already sorted by newest first, 
+        # the first order encountered for each vehicle is its latest one.
+        # setdefault() stores only that first occurrence
+        for order in orders:
+            latest.setdefault(
+                order.vehicle_id.id,
+                order,
+            )
+
+        for vehicle in self:
+            vehicle.last_service_order_id = latest.get(
+                vehicle.id
+            )
+
     @api.onchange("manufacturer_id")
     def _onchange_manufacturer_id(self):
         if (
@@ -223,14 +259,18 @@ class VehicleVehicle(models.Model):
         for vals in vals_list:
             registration = vals.get("registration_number")
             if registration:
-                vals["registration_number"] = self._normalise_registration(registration)
+                vals["registration_number"] = self._normalise_registration(
+                    registration
+                )
 
         return super().create(vals_list)
 
     def write(self, vals):
         registration = vals.get("registration_number")
         if registration:
-            vals["registration_number"] = self._normalise_registration(registration)
+            vals["registration_number"] = self._normalise_registration(
+                registration
+            )
 
         return super().write(vals)
 
@@ -260,3 +300,31 @@ class VehicleVehicle(models.Model):
             "default_customer_id": self.owner_id.id,
         }
         return action
+
+    def action_view_completed_service_history(self):
+        self.ensure_one()
+        action = self.env.ref(
+            "vehicle_service.action_vehicle_service_order"
+        ).read()[0]
+        action["domain"] = [
+            ("vehicle_id", "=", self.id),
+            ("state", "=", "completed"),
+        ]
+        action["context"] = {
+            "default_vehicle_id": self.id,
+            "default_customer_id": self.owner_id.id,
+            "search_default_completed": 1,
+        }
+        return action
+
+    def action_new_service_order(self):
+        return {
+            "type":"ir.actions.act_window",
+            "res_model":"vehicle.service.order",
+            "view_mode":"form",
+            "target":"current",
+            "context":{
+                "default_vehicle_id":self.id,
+                "default_customer_id":self.owner_id.id,
+            }
+        }
