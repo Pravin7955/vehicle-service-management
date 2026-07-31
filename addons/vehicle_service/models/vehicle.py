@@ -47,6 +47,12 @@ class VehicleVehicle(models.Model):
         index=True,
         ondelete="restrict",
     )
+    service_order_ids = fields.One2many(
+        "vehicle.service.order",
+        "vehicle_id",
+        string="Service Orders",
+    )
+
     owner_mobile = fields.Char(
         string="Owner Mobile",
         related="owner_id.mobile",
@@ -91,6 +97,11 @@ class VehicleVehicle(models.Model):
         string="Active",
         default=True,
         tracking=True,
+    )
+
+    service_order_count = fields.Integer(
+        string="Service Order Count",
+        compute="_compute_service_order_count",
     )
 
     parts_cost = fields.Float(
@@ -177,6 +188,27 @@ class VehicleVehicle(models.Model):
                 record.vehicle_age = 0
                 continue
             record.vehicle_age = current_year - record.manufacturing_year
+    
+    @api.depends("service_order_ids")
+    def _compute_service_order_count(self):
+        grouped_data = self.env[
+            "vehicle.service.order"
+        ].read_group(
+            domain=[("vehicle_id", "in", self.ids)],
+            fields=["vehicle_id"],
+            groupby=["vehicle_id"],
+        )
+
+        count_map = {
+            item["vehicle_id"][0]: item["vehicle_id_count"]
+            for item in grouped_data
+        }
+
+        for vehicle in self:
+            vehicle.service_order_count = count_map.get(
+                vehicle.id,
+                0,
+            )
 
     @api.onchange("manufacturer_id")
     def _onchange_manufacturer_id(self):
@@ -213,3 +245,18 @@ class VehicleVehicle(models.Model):
 
     def _normalise_registration(self, value):
         return value.upper().strip() if value else value
+
+    def action_view_service_orders(self):
+        self.ensure_one()
+        action = self.env.ref(
+            "vehicle_service.action_vehicle_service_order"
+        ).read()[0]
+        action["view_mode"] = "list,form"
+        action["domain"] = [
+            ("vehicle_id","=",self.id)
+        ]
+        action["context"] = {
+            "default_vehicle_id": self.id,
+            "default_customer_id": self.owner_id.id,
+        }
+        return action

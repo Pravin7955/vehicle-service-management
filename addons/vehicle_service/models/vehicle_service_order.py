@@ -199,6 +199,22 @@ class VehicleServiceOrder(models.Model):
                 )
         return super().create(vals_list)
 
+    def write(self, vals):
+        locked_fields = {
+            "vehicle_id",
+            "customer_id",
+            "check_in_datetime",
+            "expected_delivery_date",
+        }
+        if locked_fields.intersection(vals):
+            for order in self:
+                if order.state == "draft":
+                    continue
+                raise UserError(
+                    "General information cannot be modified after confirmation."
+                )
+        return super().write(vals)
+
     def unlink(self):
         for record in self:
             if record.state != "draft":
@@ -234,3 +250,25 @@ class VehicleServiceOrder(models.Model):
     def action_cancel(self):
         for record in self:
             record.state = "cancelled"
+
+    def _is_editable(self):
+        self.ensure_one()
+        return self.state in (
+            "draft",
+            "confirmed",
+            "in_progress",
+        )
+
+    def _is_locked(self):
+        self.ensure_one()
+        return self.state in (
+            "completed",
+            "cancelled",
+        )
+
+    def _check_modifiable(self):
+        self.ensure_one()
+        if self._is_locked():
+            raise UserError(
+                "Completed or cancelled Service Orders cannot be modified."
+            )

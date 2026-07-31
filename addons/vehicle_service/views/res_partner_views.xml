@@ -17,6 +17,16 @@
                         widget="statinfo"
                         string="Vehicles"/>
                 </button>
+                <button
+                    name="action_view_service_orders"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-wrench">
+                    <field
+                        name="service_order_count"
+                        widget="statinfo"
+                        string="Service Orders"/>
+                </button>
             </xpath>
         </field>
     </record>

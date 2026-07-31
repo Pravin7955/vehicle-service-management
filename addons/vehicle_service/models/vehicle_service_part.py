@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class VehicleServicePart(models.Model):
@@ -93,3 +94,24 @@ class VehicleServicePart(models.Model):
             return
         self.name = self.product_id.display_name
         self.unit_price = self.product_id.lst_price
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            service_order = self.env[
+                "vehicle.service.order"
+            ].browse(
+                vals["service_order_id"]
+            )
+            service_order._check_modifiable()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        for line in self:
+            line.service_order_id._check_modifiable()
+        return super().write(vals)
+
+    def unlink(self):
+        for line in self:
+            line.service_order_id._check_modifiable()
+        return super().unlink()

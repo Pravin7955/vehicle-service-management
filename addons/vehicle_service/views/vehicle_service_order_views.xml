@@ -55,13 +55,13 @@
                     <group>
                         <group string="Service Information">
                             <field name="name" readonly="1"/>
-                            <field name="vehicle_id"/>
-                            <field name="customer_id"/>
+                            <field name="vehicle_id" readonly="state != 'draft'"/>
+                            <field name="customer_id" readonly="state != 'draft'"/>
                         </group>
                         <group string="Schedule">
-                            <field name="check_in_datetime"/>
-                            <field name="expected_delivery_date"/>
-                            <field name="odometer"/>
+                            <field name="check_in_datetime" readonly="state != 'draft'"/>
+                            <field name="expected_delivery_date" readonly="state != 'draft'"/>
+                            <field name="odometer" readonly="state != 'draft'"/>
                         </group>
                     </group>
                     <group string="Customer Complaint">
@@ -83,7 +83,9 @@
                             </group>
                         </page>
                         <page string="Labour">
-                            <field name="labour_line_ids">
+                            <field 
+                                name="labour_line_ids"
+                                readonly="state in ('completed','cancelled')">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
@@ -95,7 +97,9 @@
                             </field>
                         </page>
                         <page string="Parts">
-                            <field name="part_line_ids">
+                            <field 
+                                name="part_line_ids"
+                                readonly="state in ('completed','cancelled')">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
                                     <field name="product_id"/>
