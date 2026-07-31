@@ -27,6 +27,7 @@
         "mail",
         "contacts",
         "product",
+        "stock",
     ],
 
     "data": [
@@ -34,11 +35,13 @@
         "security/ir.model.access.csv",
         "security/vehicle_rules.xml",
         "data/ir_sequence.xml",
+        "data/stock_location_data.xml",
         "views/vehicle_views.xml",
         "views/vehicle_manufacturer_views.xml",
         "views/vehicle_model_views.xml",
         "views/res_partner_views.xml",
         "views/vehicle_service_order_views.xml",
+        "views/res_config_settings_views.xml",
         "views/menu.xml",
     ],
 

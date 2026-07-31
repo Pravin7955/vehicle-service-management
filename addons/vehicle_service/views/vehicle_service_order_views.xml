@@ -31,6 +31,12 @@
                         class="btn-primary"
                         invisible="state != 'draft'"/>
                     <button
+                        name="action_reserve_parts"
+                        type="object"
+                        string="Reserve Parts"
+                        class="btn-secondary"
+                        invisible="state != 'confirmed'"/>
+                    <button
                         name="action_start"
                         type="object"
                         string="Start Work"
@@ -51,7 +57,19 @@
                         statusbar_visible="draft,confirmed,in_progress,completed"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_stock_picking"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-exchange">
+
+                            <field
+                                name="stock_picking_count"
+                                widget="statinfo"
+                                string="Picking"/>
+                        </button>
+                    </div>
                     <group>
                         <group string="Service Information">
                             <field name="name" readonly="1"/>
@@ -110,6 +128,18 @@
                                     <field name="subtotal" readonly="1"/>
                                 </tree>
                             </field>
+                        </page>
+                        <page string="Inventory">
+                            <group>
+                                <group>
+                                    <field
+                                        name="inventory_status"
+                                        readonly="1"/>
+                                    <field
+                                        name="stock_picking_id"
+                                        readonly="1"/>
+                                </group>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

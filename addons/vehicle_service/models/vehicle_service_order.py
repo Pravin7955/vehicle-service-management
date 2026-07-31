@@ -57,6 +57,13 @@ class VehicleServiceOrder(models.Model):
         tracking=True,
         index=True,
     )
+    stock_picking_id = fields.Many2one(
+        "stock.picking",
+        string="Stock Picking",
+        readonly=True,
+        copy=False,
+        index=True,
+    )
     labour_line_ids = fields.One2many(
         "vehicle.service.labour",
         "service_order_id",
@@ -117,6 +124,9 @@ class VehicleServiceOrder(models.Model):
         digits=(16, 1),
         tracking=True,
     )
+    notes = fields.Html(
+        string="Internal Notes",
+    )
     state = fields.Selection(
         [
             ("draft", "Draft"),
@@ -132,8 +142,18 @@ class VehicleServiceOrder(models.Model):
         tracking=True,
         index=True,
     )
-    notes = fields.Html(
-        string="Internal Notes",
+    inventory_status = fields.Selection(
+        [
+            ("not_reserved", "Not Reserved"),
+            ("waiting", "Waiting"),
+            ("reserved", "Reserved"),
+            ("done", "Consumed"),
+        ],
+        string="Inventory Status",
+        compute="_compute_inventory_status",
+    )
+    stock_picking_count = fields.Integer(
+        compute="_compute_stock_picking_count",
     )
 
     _sql_constraints = [
@@ -180,6 +200,32 @@ class VehicleServiceOrder(models.Model):
                 order.labour_cost
                 + order.parts_cost
             )
+
+    @api.depends("stock_picking_id.state")
+    def _compute_inventory_status(self):
+        mapping = {
+            "draft": "not_reserved",
+            "confirmed": "waiting",
+            "waiting": "waiting",
+            "assigned": "reserved",
+            "done": "done",
+            "cancel": "not_reserved",
+        }
+        for order in self:
+            if order.stock_picking_id:
+                order.inventory_status = mapping.get(
+                    order.stock_picking_id.state,
+                    "not_reserved",
+                )
+            else:
+                order.inventory_status = "not_reserved"
+
+    def _compute_stock_picking_count(self):
+        """If in future one order supports multiple pickings 
+        nothing changes in XML. Only compute changes. 
+        That's designing for future growth."""
+        for order in self:
+            order.stock_picking_count = 1 if order.stock_picking_id else 0
 
     @api.onchange("vehicle_id")
     def _onchange_vehicle_id(self):
@@ -251,6 +297,26 @@ class VehicleServiceOrder(models.Model):
         for record in self:
             record.state = "cancelled"
 
+    def action_reserve_parts(self):
+        self.ensure_one()
+
+        raise NotImplementedError(
+            "Implemented in Lesson 5.2C"
+        )
+
+    def action_view_stock_picking(self):
+        self.ensure_one()
+        if not self.stock_picking_id:
+            return False
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Stock Picking",
+            "res_model": "stock.picking",
+            "view_mode": "form",
+            "res_id": self.stock_picking_id.id,
+            "target": "current",
+        }
+
     def _is_editable(self):
         self.ensure_one()
         return self.state in (
@@ -272,3 +338,12 @@ class VehicleServiceOrder(models.Model):
             raise UserError(
                 "Completed or cancelled Service Orders cannot be modified."
             )
+
+    def _get_workshop_location(self):
+        self.ensure_one()
+        location = self.company_id.workshop_location_id
+        if not location:
+            raise UserError(
+                "Please configure Workshop Stock Location from Settings."
+            )
+        return location
