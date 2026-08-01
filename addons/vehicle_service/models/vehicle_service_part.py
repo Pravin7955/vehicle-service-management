@@ -11,6 +11,7 @@ class VehicleServicePart(models.Model):
 
     name = fields.Text(
         string="Description",
+        translate=True,
     )
     sequence = fields.Integer(
         string="Sequence",
@@ -30,6 +31,7 @@ class VehicleServicePart(models.Model):
         related="service_order_id.company_id",
         store=True,
         readonly=True,
+        index=True,
     )
     currency_id = fields.Many2one(
         "res.currency",
@@ -44,6 +46,7 @@ class VehicleServicePart(models.Model):
         required=True,
         ondelete="restrict",
         index=True,
+        domain=[("detailed_type", "=", "product")]
     )
     product_uom_id = fields.Many2one(
         "uom.uom",
@@ -51,6 +54,12 @@ class VehicleServicePart(models.Model):
         string="Unit of Measure",
         readonly=True,
         store=True,
+    )
+    stock_move_ids = fields.One2many(
+        "stock.move",
+        "service_part_line_id",
+        string="Stock Moves",
+        readonly=True,
     )
 
     product_uom_qty = fields.Float(
@@ -69,6 +78,11 @@ class VehicleServicePart(models.Model):
         compute="_compute_subtotal",
         store=True,
     )
+    # Future fields : 
+    # available_qty
+    # display_type
+    # analytic fields
+    # taxes
 
     _sql_constraints = [
         (
@@ -101,17 +115,20 @@ class VehicleServicePart(models.Model):
             service_order = self.env[
                 "vehicle.service.order"
             ].browse(
-                vals["service_order_id"]
+                vals.get("service_order_id")
             )
             service_order._check_modifiable()
+            service_order._mark_inventory_outdated()
         return super().create(vals_list)
 
     def write(self, vals):
         for line in self:
             line.service_order_id._check_modifiable()
+            line.service_order_id._mark_inventory_outdated()
         return super().write(vals)
 
     def unlink(self):
         for line in self:
             line.service_order_id._check_modifiable()
+            line.service_order_id._mark_inventory_outdated()
         return super().unlink()

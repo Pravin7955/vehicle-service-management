@@ -19,7 +19,7 @@
 
     "category": "Services",
 
-    "version": "17.0.1.0.1",
+    "version": "17.0.1.0.2",
 
     "license": "LGPL-3",
 
