@@ -31,20 +31,28 @@
                         class="btn-primary"
                         invisible="state != 'draft'"/>
                     <button
-                        name="action_reserve_parts"
+                        name="action_sync_inventory"
+                        type="object"
+                        string="Synchronize Document"
+                        class="btn-primary"
+                        invisible="state in ('completed','cancelled')"/>
+                    <button
+                        name="action_reserve_inventory"
                         type="object"
                         string="Reserve Parts"
-                        class="btn-secondary"
-                        invisible="state != 'confirmed'"/>
+                        class="btn-primary"
+                        invisible="state not in ('confirmed','in_progress')"/>
                     <button
                         name="action_start"
                         type="object"
                         string="Start Work"
+                        class="btn-primary"
                         invisible="state != 'confirmed'"/>
                     <button
                         name="action_complete"
                         type="object"
                         string="Complete"
+                        class="btn-primary"
                         invisible="state != 'in_progress'"/>
                     <button
                         name="action_cancel"
@@ -62,12 +70,12 @@
                             name="action_view_stock_picking"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-exchange">
-
+                            icon="fa-exchange"
+                            invisible="not stock_picking_id">
                             <field
                                 name="stock_picking_count"
                                 widget="statinfo"
-                                string="Picking"/>
+                                string="Stock Picking"/>
                         </button>
                     </div>
                     <group>
@@ -120,21 +128,34 @@
                                 readonly="state in ('completed','cancelled')">
                                 <tree editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="product_id"/>
+                                    <field name="product_id" options="{'no_create': True}"/>
                                     <field name="name"/>
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom_id" readonly="1"/>
                                     <field name="unit_price"/>
-                                    <field name="subtotal" readonly="1"/>
+                                    <field name="subtotal" sum="Total" readonly="1"/>
+                                    <field
+                                        name="stock_move_ids"
+                                        widget="many2many_tags"
+                                        optional="hide"
+                                        readonly="1"/>
                                 </tree>
                             </field>
                         </page>
                         <page string="Inventory">
                             <group>
-                                <group>
+                                <group string="Synchronization">
                                     <field
-                                        name="inventory_status"
+                                        name="inventory_sync_state"
+                                        widget="badge"
                                         readonly="1"/>
+                                    <field
+                                        name="reservation_state"
+                                        readonly="1"
+                                        widget="badge"
+                                        decoration-danger="reservation_state == 'not_reserved'"
+                                        decoration-warning="reservation_state == 'partial'"
+                                        decoration-success="reservation_state in ('reserved', 'consumed')"/>
                                     <field
                                         name="stock_picking_id"
                                         readonly="1"/>
