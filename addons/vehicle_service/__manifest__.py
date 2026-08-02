@@ -36,6 +36,9 @@
         "security/vehicle_rules.xml",
         "data/ir_sequence.xml",
         "data/stock_location_data.xml",
+
+        "wizard/vehicle_checkin_wizard_views.xml",
+
         "views/vehicle_views.xml",
         "views/vehicle_manufacturer_views.xml",
         "views/vehicle_model_views.xml",
