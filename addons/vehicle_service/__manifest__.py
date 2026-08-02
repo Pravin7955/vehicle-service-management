@@ -28,6 +28,8 @@
         "contacts",
         "product",
         "stock",
+        "portal",
+        "website",
     ],
 
     "data": [
@@ -50,6 +52,7 @@
         "views/vehicle_service_order_views.xml",
         "views/res_config_settings_views.xml",
         "views/menu.xml",
+        "views/website_service_status.xml",
     ],
 
     "demo": [

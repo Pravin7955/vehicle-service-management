@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="website_service_status" name="Vehicle Service Status">
+        <t t-call="website.layout">
+            <div class="container mt-5 mb-5">
+                <div class="text-center mb-4">
+                    <h1 class="display-5 fw-bold">
+                        Vehicle Service Status
+                    </h1>
+                    <p class="lead text-muted">
+                        Track the progress of your vehicle service in real time.
+                    </p>
+                </div>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body text-center">
+                        <h5 class="mb-3">
+                            Current Status
+                        </h5>
+                        <span t-attf-class="badge bg-#{status_color} fs-6 px-4 py-2">
+                            <t t-esc="status_label"/>
+                        </span>
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        Service Order
+                        <strong>
+                            <span t-field="service_order.name"/>
+                        </strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header">
+                                <strong>Service Progress</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <t t-foreach="workflow_steps" t-as="step">
+                                        <div class="col">
+                                            <div t-attf-class="badge bg-#{step['color']} rounded-pill px-3 py-2">
+                                                <t t-esc="step['icon']"/>
+                                            </div>
+                                            <div class="mt-2">
+                                                <small class="fw-semibold">
+                                                    <t t-esc="step['label']"/>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <strong>Vehicle Information</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-borderless table-sm">
+                                            <tr>
+                                                <th>Vehicle</th>
+                                                <td>
+                                                    <span t-field="service_order.vehicle_id"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Registration</th>
+                                                <td>
+                                                    <span t-field="service_order.vehicle_id.registration_number"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Check-In</th>
+                                                <td>
+                                                    <span t-field="service_order.check_in_datetime"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Expected Delivery</th>
+                                                <td>
+                                                    <span t-field="service_order.expected_delivery_date"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-header">
+                                        <strong>Customer Information</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table table-borderless table-sm">
+                                            <tr>
+                                                <th>Name</th>
+                                                <td>
+                                                    <span t-field="service_order.customer_id"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Phone</th>
+                                                <td>
+                                                    <span t-field="service_order.customer_id.phone"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Email</th>
+                                                <td>
+                                                    <span t-field="service_order.customer_id.email"/>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>Advisor</th>
+                                                <td>
+                                                    <span t-field="service_order.advisor_id"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                Customer Complaint
+                            </div>
+                            <div class="card-body">
+                                <div class="border rounded bg-light p-3">
+                                    <span t-field="service_order.customer_complaint"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mt-4">
+                            <div class="card-header">
+                                Estimated Cost
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <td>Labour</td>
+                                        <td class="text-end">
+                                            <span t-field="service_order.labour_cost"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Parts</td>
+                                        <td class="text-end">
+                                            <span t-field="service_order.parts_cost"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Total</strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <strong>
+                                                <span t-field="service_order.total_cost"/>
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mt-5 pt-4 border-top text-center text-muted">
+                            <p class="mb-1">
+                                Thank you for choosing our workshop.
+                            </p>
+                            <p class="mb-1">
+                                Powered by <strong>Vehicle Service Management</strong>
+                            </p>
+                            <small>
+                                Last Updated:
+                                <span t-esc="last_updated"/>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>
