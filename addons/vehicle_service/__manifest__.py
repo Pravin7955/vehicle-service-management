@@ -34,6 +34,10 @@
         "security/groups.xml",
         "security/ir.model.access.csv",
         "security/vehicle_rules.xml",
+
+        "report/service_order_reports.xml",
+        "report/service_order_job_card.xml",
+
         "data/ir_sequence.xml",
         "data/stock_location_data.xml",
 
