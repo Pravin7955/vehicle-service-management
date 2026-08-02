@@ -22,6 +22,15 @@
         <field name="model">vehicle.vehicle</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button
+                        name="%(action_vehicle_checkin_wizard)d"
+                        type="action"
+                        string="Check-In"
+                        class="btn-primary"
+                        context="{'active_id': id}"
+                        invisible="not id"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="service_order_job_card_document">
+        <t t-call="web.external_layout">
+            <t t-set="meta" t-value="report"/>
+            <t t-set="info" t-value="meta['summary'][doc.id]"/>
+            <div class="page">
+                <h2 class="text-center">Job Card</h2>
+                <table class="table table-sm mt32">
+                    <tr>
+                        <td>
+                            <strong>Service Order</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.name"/>
+                        </td>
+                        <td>
+                            <strong>Status</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.state"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Vehicle</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.vehicle_id"/>
+                        </td>
+                        <td>
+                            <strong>Owner</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.customer_id"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Expected Delivery</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.expected_delivery_date"/>
+                        </td>
+                        <td>
+                            <strong>Advisor</strong>
+                        </td>
+                        <td>
+                            <span t-field="doc.advisor_id"/>
+                        </td>
+                    </tr>
+                </table>
+
+                <h4 class="mt32">Customer Complaint</h4>
+                <div style="
+                        border:1px solid #999;
+                        min-height:70px;
+                        padding:10px;
+                        margin-bottom:20px;
+                    ">
+                    <span t-field="doc.customer_complaint"/>
+                </div>
+
+                <h4 class="mt32">Labour Details</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Hours</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="doc.labour_line_ids" t-as="line">
+                            <td>
+                                <span t-field="line.name"/>
+                            </td>
+                            <td>
+                                <span t-field="line.hours"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.subtotal"/>
+                            </td>
+                        </tr>
+                        <t t-foreach="range(info['empty_labour_rows'])" t-as="line">
+                            <tr>
+                                <td>&#160;</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <h4 class="mt32">Parts</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Qty</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="doc.part_line_ids" t-as="line">
+                            <td>
+                                <span t-field="line.product_id"/>
+                            </td>
+                            <td>
+                                <span t-field="line.product_uom_qty"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="line.subtotal"/>
+                            </td>
+                        </tr>
+                        <t t-foreach="range(info['empty_part_rows'])" t-as="line">
+                            <tr>
+                                <td>&#160;</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="row mt32">
+                    <div class="col-6"/>
+                    <div class="col-6">
+                        <table class="table table-sm" style="width:45%; float:right;">
+                            <tr>
+                                <td>Labour</td>
+                                <td class="text-end">
+                                    <span t-field="doc.labour_cost"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Parts</td>
+                                <td class="text-end">
+                                    <span t-field="doc.parts_cost"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>Total</strong>
+                                </td>
+                                <td class="text-end">
+                                    <strong>
+                                        <span t-field="doc.total_cost"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <h4 class="mt32">Workshop Use Only</h4>
+                <table class="table table-bordered">
+                    <tr>
+                        <td width="35%">Technician Assigned</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Repair Started</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Repair Completed</td>
+                        <td></td>
+                    </tr>
+                </table>
+
+                <h4>Technician Remarks</h4>
+                <div style="border:1px solid #888; height:120px;">
+                </div>
+
+                <div class="row mt64">
+                    <div class="col-4 text-center">
+                        _____________________
+                        <br/>
+                        Service Advisor
+                    </div>
+                    <div class="col-4 text-center">
+                        _____________________
+                        <br/>
+                        Technician
+                    </div>
+                    <div class="col-4 text-center">
+                        _____________________
+                        <br/>
+                        Customer
+                    </div>
+                </div>
+                
+                <hr/>
+
+                <div class="text-end text-muted">Generated by
+                    <strong>
+                        <t t-esc="meta['generated_by'].name"/>
+                    </strong>
+                    on
+                    <strong>
+                        <t t-esc="meta['generated_on']"/>
+                    </strong>
+                    <br/>
+                    Vehicle Service Management
+                    -
+                    <t t-esc="meta['version']"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="service_order_job_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="vehicle_service.service_order_job_card_document"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

@@ -5,11 +5,17 @@ from odoo.exceptions import ValidationError, UserError
 
 from odoo.tools.float_utils import float_compare
 
+from urllib.parse import urljoin
+
 
 class VehicleServiceOrder(models.Model):
     _name = "vehicle.service.order"
     _description = "Vehicle Service Order"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = [
+        "mail.thread",
+        "mail.activity.mixin",
+        "portal.mixin",
+    ]
     _order = "check_in_datetime desc, id desc"
 
     name = fields.Char(
@@ -174,6 +180,12 @@ class VehicleServiceOrder(models.Model):
         compute="_compute_stock_picking_count",
     )
 
+    # Revisite in future and remove if not usecase.
+    public_status_url = fields.Char(
+        string="Public Status URL",
+        compute="_compute_public_status_url",
+    )
+
     _sql_constraints = [
         (
             "vehicle_service_order_name_unique",
@@ -275,6 +287,26 @@ class VehicleServiceOrder(models.Model):
         for order in self:
             order.stock_picking_count = 1 if order.stock_picking_id else 0
 
+    def _compute_public_status_url(self):
+        """
+        Compute service status URL for public.
+        It uses Access token to generate URL.
+        Added for developement purpuses.
+
+        Revisite in future and remove if not usecase.
+        """
+        base_url = self.env["ir.config_parameter"].sudo().get_param(
+            "web.base.url"
+        )
+
+        for order in self:
+            order._portal_ensure_token()
+
+            order.public_status_url = urljoin(
+                base_url,
+                f"/service/status/{order.access_token}",
+            )
+
     @api.onchange("vehicle_id")
     def _onchange_vehicle_id(self):
         if self.vehicle_id:
@@ -316,6 +348,18 @@ class VehicleServiceOrder(models.Model):
                     "Only draft service orders can be deleted."
                 )
         return super().unlink()
+    
+    @api.model
+    def get_by_access_token(self, access_token):
+        """
+        @api.model used.
+        Method can work without record instance.
+        Helper method to get record by access_token.
+        """
+        return self.sudo().search(
+            [("access_token", "=", access_token)],
+            limit=1,
+        )
 
     # -------------------------------------------------------------------------
     # Workflow Guard Methods
@@ -746,3 +790,128 @@ class VehicleServiceOrder(models.Model):
             "picking_id": picking.id,
             "origin": self.name,
         }
+
+    # -------------------------------------------------------------------------
+    # Public Website
+    # -------------------------------------------------------------------------
+
+    def _prepare_public_status_context(self):
+        """
+        Prepare context used by the public website page.
+
+        Controllers should remain thin and delegate all
+        presentation preparation to the business model.
+        """
+
+        self.ensure_one()
+
+        return {
+            "workflow_steps": self._prepare_workflow_steps(),
+            "last_updated": self.write_date,
+            "status_color": self._get_status_color(),
+            "status_label": dict(
+                self._fields["state"].selection
+            ).get(self.state),
+        }
+
+    def _prepare_workflow_steps(self):
+        """
+        Prepare workshop workflow progress.
+        """
+        self.ensure_one()
+
+        workflow = [
+            ("draft", "Draft"),
+            ("confirmed", "Confirmed"),
+            ("in_progress", "In Progress"),
+            ("completed", "Completed"),
+        ]
+
+        # Completed
+        if self.state == "completed":
+            return [
+                {
+                    "state": state,
+                    "label": label,
+                    "status": "done",
+                    "icon": "✓",
+                    "color": "success",
+                }
+                for state, label in workflow
+            ]
+
+        # Cancelled
+        if self.state == "cancelled":
+            result = []
+            reached_cancel = False
+
+            for state, label in workflow:
+                if state == "completed":
+                    break
+                if not reached_cancel:
+                    result.append({
+                        "state": state,
+                        "label": label,
+                        "status": "done",
+                        "icon": "✓",
+                        "color": "success",
+                    })
+
+            result.append({
+                "state": "cancelled",
+                "label": "Cancelled",
+                "status": "cancelled",
+                "icon": "✕",
+                "color": "danger",
+            })
+            return result
+
+        current_index = next(
+            (
+                index
+                for index, (state, _) in enumerate(workflow)
+                if state == self.state
+            ),
+            -1,
+        )
+
+        result = []
+
+        for index, (state, label) in enumerate(workflow):
+            if index < current_index:
+                result.append({
+                    "state": state,
+                    "label": label,
+                    "status": "done",
+                    "icon": "✓",
+                    "color": "success",
+                })
+            elif index == current_index:
+                result.append({
+                    "state": state,
+                    "label": label,
+                    "status": "current",
+                    "icon": "●",
+                    "color": "warning",
+                })
+            else:
+                result.append({
+                    "state": state,
+                    "label": label,
+                    "status": "pending",
+                    "icon": "○",
+                    "color": "secondary",
+                })
+
+        return result
+
+    def _get_status_color(self):
+        self.ensure_one()
+
+        return {
+            "draft": "secondary",
+            "confirmed": "primary",
+            "in_progress": "warning",
+            "completed": "success",
+            "cancelled": "danger",
+        }.get(self.state, "secondary")

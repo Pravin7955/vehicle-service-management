@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_vehicle_checkin_wizard_form" model="ir.ui.view">
+        <field name="name">vehicle.checkin.wizard.form</field>
+        <field name="model">vehicle.checkin.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle Check-In">
+                <group>
+                    <group string="Vehicle">
+                        <field name="vehicle_id"/>
+                        <field name="owner_id"/>
+                        <field name="check_in_odometer"/>
+                    </group>
+                    <group string="Check-In">
+                        <field name="service_type"/>
+                        <field name="advisor_id"/>
+                        <field name="expected_delivery_date"/>
+                    </group>
+                </group>
+                <group string="Customer Complaint">
+                    <field
+                        name="customer_complaint"
+                        nolabel="1"
+                        placeholder="Describe customer's complaint..."/>
+                </group>
+                <footer>
+                    <button
+                        name="action_create_service_order"
+                        type="object"
+                        string="Create Service Order"
+                        class="btn-primary"/>
+                    <button
+                        string="Cancel"
+                        special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vehicle_checkin_wizard" model="ir.actions.act_window">
+        <field name="name">Vehicle Check-In</field>
+        <field name="res_model">vehicle.checkin.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

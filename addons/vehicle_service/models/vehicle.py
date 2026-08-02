@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from datetime import date
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError, UserError
 
 
 class VehicleVehicle(models.Model):
@@ -317,6 +317,7 @@ class VehicleVehicle(models.Model):
         }
         return action
 
+    # ToDo: Maybe need to delete in future. Revisit in future.
     def action_new_service_order(self):
         return {
             "type":"ir.actions.act_window",
@@ -327,4 +328,55 @@ class VehicleVehicle(models.Model):
                 "default_vehicle_id":self.id,
                 "default_customer_id":self.owner_id.id,
             }
+        }
+
+    def action_create_service_order(self, values):
+        """
+        Create a Service Order for this vehicle.
+        This method acts as the business API for all future
+        Service Order creation entry points.
+        Current callers:
+            • Vehicle Check-In Wizard
+        Future callers:
+            • Customer Portal
+            • REST API
+            • Website Appointment
+            • Scheduled Service Reminder
+        """
+
+        self.ensure_one()
+
+        if not self.owner_id:
+            raise UserError(
+                _("The vehicle must have an owner before creating a Service Order.")
+            )
+
+        service_order_vals = {
+            "vehicle_id": self.id,
+            "owner_id": self.owner_id.id,
+            "advisor_id": values["service_advisor_id"],
+            "odometer": values["check_in_odometer"],
+            "customer_complaint": values["customer_complaint"],
+            "expected_delivery_date": values["expected_delivery_date"],
+        }
+
+        # ------------------------------------------------------------------
+        # TEMP(service_type) currently exists only in the Check-In Wizard to
+        # demonstrate Selection fields and wizard data collection.
+        # Planned Version:
+        #     Workshop Operations
+        # Future:
+        #     Persist Service Type on Service Order.
+        # ------------------------------------------------------------------
+
+        service_order = self.env["vehicle.service.order"].create(
+            service_order_vals
+        )
+
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "vehicle.service.order",
+            "res_id": service_order.id,
+            "view_mode": "form",
+            "target": "current",
         }

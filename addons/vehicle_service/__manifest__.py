@@ -28,14 +28,23 @@
         "contacts",
         "product",
         "stock",
+        "portal",
+        "website",
     ],
 
     "data": [
         "security/groups.xml",
         "security/ir.model.access.csv",
         "security/vehicle_rules.xml",
+
+        "report/service_order_reports.xml",
+        "report/service_order_job_card.xml",
+
         "data/ir_sequence.xml",
         "data/stock_location_data.xml",
+
+        "wizard/vehicle_checkin_wizard_views.xml",
+
         "views/vehicle_views.xml",
         "views/vehicle_manufacturer_views.xml",
         "views/vehicle_model_views.xml",
@@ -43,6 +52,7 @@
         "views/vehicle_service_order_views.xml",
         "views/res_config_settings_views.xml",
         "views/menu.xml",
+        "views/website_service_status.xml",
     ],
 
     "demo": [
